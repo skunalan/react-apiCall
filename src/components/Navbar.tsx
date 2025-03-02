@@ -4,9 +4,9 @@ import { Navbar, Nav, Container, Button, Form } from "react-bootstrap";
 
 const AppNavbar = () => {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary shadow-lg">
       <Container fluid>
-        <Navbar.Brand href="/">Favourites</Navbar.Brand>
+        <Navbar.Brand href="/">Company</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -14,8 +14,8 @@ const AppNavbar = () => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="#">Link</Nav.Link>
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/favorites">Favorites</Nav.Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control
