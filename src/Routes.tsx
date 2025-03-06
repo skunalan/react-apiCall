@@ -4,6 +4,8 @@ import HomePage, { usersLoader } from "./pages/HomePage";
 import UserPage, { userDetailLoader } from "./pages/UserPage";
 import FavoritesPage from "./pages/FavoritesPage";
 
+
+
 const routes: RouteObject[] = [
   {
     path: "/",
