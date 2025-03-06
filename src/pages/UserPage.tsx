@@ -1,13 +1,7 @@
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
-import {
-  Card,
-  Col,
-  Container,
-  ListGroup,
-  Nav,
-  Row,
-} from "react-bootstrap";
+import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { Card, Col, Container, ListGroup, Nav, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { JSX } from "react/jsx-runtime";
 
 interface UserDetailParams {
   id: number;
@@ -21,6 +15,22 @@ interface PostParams {
   title: string;
   body: string;
 }
+
+interface AlbumParams {
+  map(arg0: (album: any) => JSX.Element): import("react").ReactNode;
+  userId: number;
+    id: number;
+    title: string;
+}
+
+interface TodoParams {
+  map(arg0: (todo: any) => JSX.Element): import("react").ReactNode;
+  userId: number;
+    id: number;
+    title: string;
+    completed: boolean;
+}
+
 export const userDetailLoader = async ({ params }: LoaderFunctionArgs) => {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/users/${params.userId}`
@@ -29,26 +39,47 @@ export const userDetailLoader = async ({ params }: LoaderFunctionArgs) => {
   return userDetail;
 };
 
-
-
 function UserPage() {
   const userDetail = useLoaderData() as UserDetailParams;
   const [posts, setPosts] = useState<PostParams[] | null>(null);
+  const [albums, setAlbums] = useState<AlbumParams | null>(null);
+  const [todos, setTodos] = useState<TodoParams | null>(null);
   const [activeTab, setActiveTab] = useState<string>("");
 
-  const fetchPosts = async () => {
+  const fetchData = async () => {
     try {
-      const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userDetail.id}/posts`)
-      const data = await response.json()
-      setPosts(data)
+      const [postsResponse, albumsResponse, todosResponse] = await Promise.all([
+        fetch(
+          `https://jsonplaceholder.typicode.com/users/${userDetail.id}/posts`
+        ),
+        fetch(
+          `https://jsonplaceholder.typicode.com/users/${userDetail.id}/albums`
+        ),
+        fetch(
+          `https://jsonplaceholder.typicode.com/users/${userDetail.id}/todos`
+        ),
+      ]);
+      const postsData = await postsResponse.json();
+      const albumsData = await albumsResponse.json();
+      const todosData = await todosResponse.json();
+      setPosts(postsData);
+      setAlbums(albumsData);
+      setTodos(todosData);
     } catch (error) {
-      
+
+      console.error("Error fetching data", error)
     }
-  }
+  };
 
   useEffect(() => {
     if (activeTab === "posts" && posts === null) {
-      fetchPosts();
+      fetchData();
+    }
+    if (activeTab === "albums" && albums === null) {
+      fetchData();
+    }
+    if (activeTab === "todos" && todos === null) {
+      fetchData();
     }
   }, [activeTab]);
   return (
@@ -69,21 +100,23 @@ function UserPage() {
                 </ListGroup>
               </Card.Body>
               <Card.Body className="mt-3 d-flex align-items-center justify-content-center">
-                <Nav variant="tabs"
+                <Nav
+                  variant="tabs"
                   activeKey={activeTab}
-                  onSelect={(selectedKey) => setActiveTab(selectedKey || "")}>
+                  onSelect={(selectedKey) => setActiveTab(selectedKey || "")}
+                >
                   <Nav.Item>
-                    <Nav.Link  className="me-5" eventKey="posts">
-                      Active
+                    <Nav.Link className="me-5" eventKey="posts">
+                      Post
                     </Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link className="me-5" eventKey="link-2">
-                      Option 2
+                    <Nav.Link className="me-5" eventKey="albums">
+                      Album
                     </Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link eventKey="link-3">Disabled</Nav.Link>
+                    <Nav.Link eventKey="todos">ToDo</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </Card.Body>
@@ -91,14 +124,36 @@ function UserPage() {
                 <Card.Body>
                   <ListGroup>
                     {posts.map((post) => (
-                      <ListGroup.Item key={post.id}>
-                        <h5>{post.title}</h5>
-                        <p>{post.body}</p>
+                      <ListGroup.Item as={Link} to={`/users/${userDetail.id}/posts/${post.id}`} key={post.id}>
+                        <h5 className="text-info text-decoration-underline">{post.title}</h5> 
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
                 </Card.Body>
               )}
+              {activeTab === "albums" && albums && (
+                <Card.Body>
+                <ListGroup>
+                  {albums.map((album) => (
+                    <ListGroup.Item key={album.id}>
+                      <h5>{album.title}</h5>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Card.Body>
+              )}
+              {activeTab === "todos" && todos && (
+                <Card.Body>
+                <ListGroup>
+                  {todos.map((todo) => (
+                    <ListGroup.Item key={todo.id}>
+                      <h5>{todo.title}</h5>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Card.Body>
+              )}
+
             </Card>
           </Col>
         </Row>

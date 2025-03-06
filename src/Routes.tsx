@@ -3,8 +3,7 @@ import RootLayout from "./root";
 import HomePage, { usersLoader } from "./pages/HomePage";
 import UserPage, { userDetailLoader } from "./pages/UserPage";
 import FavoritesPage from "./pages/FavoritesPage";
-
-
+import PostPage, { postsLoader } from "./pages/PostPage";
 
 const routes: RouteObject[] = [
   {
@@ -20,6 +19,11 @@ const routes: RouteObject[] = [
         path: "/users/:userId",
         element: <UserPage />,
         loader: userDetailLoader,
+      },
+      {
+        path: "/users/:userId/posts/:postId",
+        element: <PostPage />,
+        loader: postsLoader,
       },
       {
         path: "/favorites",
