@@ -136,7 +136,7 @@ function UserPage() {
                 <ListGroup>
                   {albums.map((album) => (
                     <ListGroup.Item key={album.id}>
-                      <h5>{album.title}</h5>
+                      <h5 className="text-warning">{album.title}</h5>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
@@ -147,7 +147,7 @@ function UserPage() {
                 <ListGroup>
                   {todos.map((todo) => (
                     <ListGroup.Item key={todo.id}>
-                      <h5>{todo.title}</h5>
+                      <h5 className="text-danger">{todo.title}</h5>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>

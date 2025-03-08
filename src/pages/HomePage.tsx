@@ -11,6 +11,7 @@ interface UserParams {
 export const usersLoader = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
   const users = await response.json();
+  localStorage.setItem("users", JSON.stringify(users))
   return users;
 };
 
