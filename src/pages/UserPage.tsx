@@ -1,7 +1,6 @@
 import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { Card, Col, Container, ListGroup, Nav, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { JSX } from "react/jsx-runtime";
 
 interface UserDetailParams {
   id: number;
@@ -17,33 +16,31 @@ interface PostParams {
 }
 
 interface AlbumParams {
-  map(arg0: (album: any) => JSX.Element): import("react").ReactNode;
   userId: number;
-    id: number;
-    title: string;
+  id: number;
+  title: string;
 }
 
 interface TodoParams {
-  map(arg0: (todo: any) => JSX.Element): import("react").ReactNode;
   userId: number;
-    id: number;
-    title: string;
-    completed: boolean;
+  id: number;
+  title: string;
+  completed: boolean;
 }
 
 export const userDetailLoader = async ({ params }: LoaderFunctionArgs) => {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/users/${params.userId}`
   );
-  const userDetail = response.json();
+  const userDetail = await response.json();
   return userDetail;
 };
 
 function UserPage() {
   const userDetail = useLoaderData() as UserDetailParams;
-  const [posts, setPosts] = useState<PostParams[] | null>(null);
-  const [albums, setAlbums] = useState<AlbumParams | null>(null);
-  const [todos, setTodos] = useState<TodoParams | null>(null);
+  const [posts, setPosts] = useState<PostParams[]>([]);
+  const [albums, setAlbums] = useState<AlbumParams[]>([]);
+  const [todos, setTodos] = useState<TodoParams[]>([]);
   const [activeTab, setActiveTab] = useState<string>("");
 
   const fetchData = async () => {
@@ -66,19 +63,12 @@ function UserPage() {
       setAlbums(albumsData);
       setTodos(todosData);
     } catch (error) {
-
-      console.error("Error fetching data", error)
+      console.error("Error fetching data", error);
     }
   };
 
   useEffect(() => {
-    if (activeTab === "posts" && posts === null) {
-      fetchData();
-    }
-    if (activeTab === "albums" && albums === null) {
-      fetchData();
-    }
-    if (activeTab === "todos" && todos === null) {
+    if (activeTab) {
       fetchData();
     }
   }, [activeTab]);
@@ -124,8 +114,14 @@ function UserPage() {
                 <Card.Body>
                   <ListGroup>
                     {posts.map((post) => (
-                      <ListGroup.Item as={Link} to={`/users/${userDetail.id}/posts/${post.id}`} key={post.id}>
-                        <h5 className="text-info text-decoration-underline">{post.title}</h5> 
+                      <ListGroup.Item
+                        as={Link}
+                        to={`/users/${userDetail.id}/posts/${post.id}`}
+                        key={post.id}
+                      >
+                        <h5 className="text-info text-decoration-underline">
+                          {post.title}
+                        </h5>
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
@@ -133,27 +129,30 @@ function UserPage() {
               )}
               {activeTab === "albums" && albums && (
                 <Card.Body>
-                <ListGroup>
-                  {albums.map((album) => (
-                    <ListGroup.Item key={album.id}>
-                      <h5 className="text-warning">{album.title}</h5>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card.Body>
+                  <ListGroup>
+                    {albums.map((album) => (
+                      <ListGroup.Item
+                        as={Link}
+                        to={`/users/${userDetail.id}/albums/${album.id}`}
+                        key={album.id}
+                      >
+                        <h5 className="text-warning">{album.title}</h5>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Card.Body>
               )}
               {activeTab === "todos" && todos && (
                 <Card.Body>
-                <ListGroup>
-                  {todos.map((todo) => (
-                    <ListGroup.Item key={todo.id}>
-                      <h5 className="text-danger">{todo.title}</h5>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card.Body>
+                  <ListGroup>
+                    {todos.map((todo) => (
+                      <ListGroup.Item key={todo.id}>
+                        <h5 className="text-danger">{todo.title}</h5>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Card.Body>
               )}
-
             </Card>
           </Col>
         </Row>
