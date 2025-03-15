@@ -119,7 +119,7 @@ function UserPage() {
                         to={`/users/${userDetail.id}/posts/${post.id}`}
                         key={post.id}
                       >
-                        <h5 className="text-info text-decoration-underline">
+                        <h5 className="text-info">
                           {post.title}
                         </h5>
                       </ListGroup.Item>
