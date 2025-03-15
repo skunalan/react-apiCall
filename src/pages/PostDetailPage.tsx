@@ -1,5 +1,5 @@
 import { Card, Container, Row } from "react-bootstrap";
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 
 interface PostDetailParams {
   userId: number;
@@ -52,8 +52,12 @@ function PostPage() {
     <>
       <Container className="mt-3">
         <Row>
-          <h3>{user.username}</h3>
-          <Card className="mt-3">
+          <h3>User Name:
+            <Link className="text-decoration-none" to={`/users/${user.id}`}>
+            {user.username}
+            </Link>
+            </h3>
+          <Card className="mt-3 shadow">
             <h3>Title</h3>
             <Card.Header>{postDetail.title}</Card.Header>
             <Card.Body>
