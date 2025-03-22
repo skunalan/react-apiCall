@@ -119,9 +119,7 @@ function UserPage() {
                         to={`/users/${userDetail.id}/posts/${post.id}`}
                         key={post.id}
                       >
-                        <h5 className="text-info">
-                          {post.title}
-                        </h5>
+                        <h5 className="text-info">{post.title}</h5>
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
@@ -147,7 +145,8 @@ function UserPage() {
                   <ListGroup>
                     {todos.map((todo) => (
                       <ListGroup.Item key={todo.id}>
-                        <h5 className="text-danger">{todo.title}</h5>
+                        
+                        <h5><input className="me-2" type="checkbox" checked={todo.completed} />{todo.title}</h5>
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
