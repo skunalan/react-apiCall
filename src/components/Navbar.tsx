@@ -4,7 +4,7 @@ import { Navbar, Nav, Container, Button, Form } from "react-bootstrap";
 import { useStore } from "../store/store";
 
 const AppNavbar = () => {
-  const { favPhotos } = useStore();
+  const { favPhotos, favPosts } = useStore();
   return (
     <Navbar expand="lg" className="bg-body-tertiary shadow-lg">
       <Container fluid>
@@ -20,7 +20,7 @@ const AppNavbar = () => {
               Home
             </Nav.Link>
             <Nav.Link as={Link} to="/favorites">
-              Favorites({favPhotos.length})
+              Favorites({favPhotos.length + favPosts.length})
             </Nav.Link>
           </Nav>
           <Form className="d-flex">
