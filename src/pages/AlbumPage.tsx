@@ -44,14 +44,14 @@ function AlbumPage() {
 
   const users = JSON.parse(localStorage.getItem("users") || "[]");
   const user = users.find((u: UserParams) => u.id === albumData.userId);
-  const {favPhotos, addFavorite, removeFavorite} = useStore()
+  const {favPhotos, addFavoritePhoto, removeFavoritePhoto} = useStore()
   const {userId} = useParams()
   
-  const handleFavClick = (photo: PhotoParams) => {
+  const handleFavPhotoClick = (photo: PhotoParams) => {
     if(favPhotos.some((fav)=> fav.id === photo.id)){
-      removeFavorite(photo.id)
+      removeFavoritePhoto(photo.id)
     } else {
-      addFavorite({...photo, userId: Number(userId)})
+      addFavoritePhoto({...photo, userId: Number(userId)})
     }
   }
 
@@ -76,7 +76,7 @@ function AlbumPage() {
                 <Card.Title>{photo.title}</Card.Title>
               </Card.Body>
               <Card.Body>
-                <Button variant={favPhotos.some((fav) => fav.id === photo.id) ? "danger" : "outline-danger"} onClick={() => handleFavClick(photo)}>{favPhotos.some((fav) => fav.id === photo.id) ? "Remove from Favorites" : "Add to Favorites"}</Button>
+                <Button variant={favPhotos.some((fav) => fav.id === photo.id) ? "danger" : "outline-danger"} onClick={() => handleFavPhotoClick(photo)}>{favPhotos.some((fav) => fav.id === photo.id) ? "Remove from Favorites" : "Add to Favorites"}</Button>
               </Card.Body>
             </Card>
             </Col>
