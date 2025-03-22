@@ -1,5 +1,6 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { Link, LoaderFunctionArgs, useLoaderData, useParams } from "react-router-dom";
+import { useStore } from "../store/store";
 
 interface AlbumParams {
   userId: number;
@@ -7,12 +8,13 @@ interface AlbumParams {
   title: string;
 }
 
-interface PhotoParams {
+export interface PhotoParams {
   albumId: number;
   id: number;
   title: string;
   url: string;
   thumbnailUrl: string;
+  userId: number;
 }
 
 interface UserParams {
@@ -42,6 +44,16 @@ function AlbumPage() {
 
   const users = JSON.parse(localStorage.getItem("users") || "[]");
   const user = users.find((u: UserParams) => u.id === albumData.userId);
+  const {favPhotos, addFavorite, removeFavorite} = useStore()
+  const {userId} = useParams()
+  
+  const handleFavClick = (photo: PhotoParams) => {
+    if(favPhotos.some((fav)=> fav.id === photo.id)){
+      removeFavorite(photo.id)
+    } else {
+      addFavorite({...photo, userId: Number(userId)})
+    }
+  }
 
   return (
     <>
@@ -64,7 +76,7 @@ function AlbumPage() {
                 <Card.Title>{photo.title}</Card.Title>
               </Card.Body>
               <Card.Body>
-                <Button variant="outline-danger">Add to Favorites</Button>
+                <Button variant={favPhotos.some((fav) => fav.id === photo.id) ? "danger" : "outline-danger"} onClick={() => handleFavClick(photo)}>{favPhotos.some((fav) => fav.id === photo.id) ? "Remove from Favorites" : "Add to Favorites"}</Button>
               </Card.Body>
             </Card>
             </Col>
