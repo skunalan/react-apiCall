@@ -20,7 +20,7 @@ const AppNavbar = () => {
               Home
             </Nav.Link>
             <Nav.Link as={Link} to="/favorites">
-              Favorites( {favPhotos.length})
+              Favorites({favPhotos.length})
             </Nav.Link>
           </Nav>
           <Form className="d-flex">
