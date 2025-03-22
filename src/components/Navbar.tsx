@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Nav, Container, Button, Form } from "react-bootstrap";
+import { useStore } from "../store/store";
 
 const AppNavbar = () => {
+  const { favPhotos } = useStore();
   return (
     <Navbar expand="lg" className="bg-body-tertiary shadow-lg">
       <Container fluid>
@@ -14,8 +16,12 @@ const AppNavbar = () => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/favorites">Favorites</Nav.Link>
+            <Nav.Link as={Link} to="/">
+              Home
+            </Nav.Link>
+            <Nav.Link as={Link} to="/favorites">
+              Favorites( {favPhotos.length})
+            </Nav.Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control
