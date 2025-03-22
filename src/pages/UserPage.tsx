@@ -2,14 +2,14 @@ import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { Card, Col, Container, ListGroup, Nav, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-interface UserDetailParams {
+export interface UserDetailParams {
   id: number;
   name: string;
   username: string;
   email: string;
 }
 
-interface PostParams {
+export interface PostParams {
   id: number;
   title: string;
   body: string;
@@ -72,6 +72,7 @@ function UserPage() {
       fetchData();
     }
   }, [activeTab]);
+
   return (
     <>
       <Container className="mt-5">
@@ -145,8 +146,14 @@ function UserPage() {
                   <ListGroup>
                     {todos.map((todo) => (
                       <ListGroup.Item key={todo.id}>
-                        
-                        <h5><input className="me-2" type="checkbox" checked={todo.completed} />{todo.title}</h5>
+                        <h5>
+                          <input
+                            className="me-2"
+                            type="checkbox"
+                            checked={todo.completed}
+                          />
+                          {todo.title}
+                        </h5>
                       </ListGroup.Item>
                     ))}
                   </ListGroup>

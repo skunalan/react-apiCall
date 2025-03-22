@@ -1,7 +1,9 @@
-import { Card, Container, Row } from "react-bootstrap";
-import { Link, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { Button, Card, Container, Row } from "react-bootstrap";
+import { Link, LoaderFunctionArgs, useLoaderData, useParams } from "react-router-dom";
+import { useStore } from "../store/store";
+import { PostParams } from "./UserPage";
 
-interface PostDetailParams {
+export interface PostDetailParams {
   userId: number;
   id: number;
   title: string;
@@ -48,6 +50,19 @@ function PostPage() {
     return <p>Loading...</p>;
   }
 
+  const {favPosts, addFavoritePost, removeFavoritePost} = useStore()
+  const {userId} = useParams()
+
+  const handleFavPostClick = (post: PostParams) => {
+    if(favPosts.some((fav) => fav.id === post.id)) {
+      removeFavoritePost(post.id)
+    } else {
+      addFavoritePost({
+        ...post, userId: Number(userId)
+      })
+    }
+  }
+
   return (
     <>
       <Container className="mt-3">
@@ -65,6 +80,7 @@ function PostPage() {
               <Card.Title>{postDetail.body}</Card.Title>
             </Card.Body>
           </Card>
+          <Button className=" mt-2 shadow" variant={favPosts.some((fav) => fav.id === postDetail.id) ? "danger" : "outline-danger"} onClick={() => handleFavPostClick(postDetail)}>{favPosts.some((fav) => fav.id === postDetail.id) ? "Remove from Favorites" : "Add to Favorites"}</Button>
           <h3 className="mb-3 mt-3">Comments</h3>
             <ul>
               {comments.map((comment) => (
